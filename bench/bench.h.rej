@@ -1,0 +1,9 @@
+diff a/bench/bench.h b/bench/bench.h	(rejected hunks)
+@@ -105,6 +106,7 @@ main(void)
+ 	mem = (unsigned char*)heap;
+ #endif
+ 	randmem(mem, MAX_MEM);
++	reset_vector();
+ 
+ 	init();
+ 	bench_main();

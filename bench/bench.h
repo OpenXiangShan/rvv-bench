@@ -36,9 +36,10 @@ static void bench_use_ptr(char const volatile *x) {}
 static inline uint64_t
 rv_cycles(void)
 {
-	uint64_t cycle;
-	__asm volatile ("rdcycle %0" : "=r"(cycle));
-	return cycle;
+	// uint64_t cycle;
+	// __asm volatile ("rdcycle %0" : "=r"(cycle));
+	// return cycle;
+	return 0;
 }
 
 static int
@@ -137,21 +138,15 @@ static void
 bench_run(size_t nImpls, Impl *impls, size_t nBenches, Bench *benches)
 {
 	for (Bench *b = benches; b != benches + nBenches; ++b) {
-		print("{\ntitle: \"")(s,b->name)("\",\n");
-		print("labels: [\"0\",");
+		printf("{\ntitle: %s ",b->name);
+		printf("labels: [");
 		for (size_t i = 0; i < nImpls; ++i)
-			print("\"")(s,impls[i].name)("\",");
-		print("],\n");
+			printf(" %s ",impls[i].name);
+		printf("] \n");
 
 		size_t N = b->N;
-		print("data: [\n[");
-		for (size_t n = 1; n < N; n = BENCH_NEXT(n))
-			print(u,n)(",");
-		print("],\n");
-		flush();
 
 		for (Impl *i = impls; i != impls + nImpls; ++i) {
-			print("[");
 			for (size_t n = 1; n < N; n = BENCH_NEXT(n)) {
 				uint64_t si = 0, s0 = 0;
 
@@ -166,18 +161,12 @@ bench_run(size_t nImpls, Impl *impls, size_t nBenches, Bench *benches)
 				}
 
 				if (si != s0) {
-					print("ERROR: ")(s,i->name)(" in ")(s,b->name)(" at ")(u,n);
-					flush();
-					exit(EXIT_FAILURE);
+					printf("ERROR: %s in %s at %d",i->name,b->name,n);
+					_halt(EXIT_FAILURE);
 				}
-
-				print(f,bench_time(n, *i, *b))(",");
-				flush();
 			}
-			print("],\n");
-			flush();
 		}
-		print("]\n},\n");
+		printf("\n}\n");
 	}
 }
 

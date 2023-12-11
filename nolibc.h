@@ -9,6 +9,26 @@
 
 static void flush(void);
 
+
+void _halt(int code);
+
+#define printf printf_
+int printf_(const char* format, ...);
+
+/*
+* set vector csr , open vector extension
+*/
+void reset_vector(){
+	asm volatile (
+        "lui a0,0x2\n"
+        "addiw a0,a0,512\n"
+        "csrs mstatus,a0\n"// set mstatus.VS to initial
+		"csrwi fcsr,0\n"
+		"csrwi vcsr,0"// clean up vcsr
+        ::
+    );
+}
+
 #if __STDC_HOSTED__
 #include <string.h>
 #include <stdlib.h>
@@ -27,7 +47,7 @@ memwrite(void const *ptr, size_t len)
 int main(void) {
 	int x = nolibc_main();
 	flush();
-	exit(x);
+	_halt(x);
 }
 #define main nolibc_main
 
@@ -67,11 +87,6 @@ memwrite(void const *ptr, size_t len)
 
 int main(void);
 
-void _start(void) {
-	int x = main();
-	flush();
-	exit(x);
-}
 
 #endif
 

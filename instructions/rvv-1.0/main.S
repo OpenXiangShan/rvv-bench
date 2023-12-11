@@ -397,14 +397,14 @@ m_benchmarks_all gen_strings
 		addi a0, a0, -1
 		bnez a0, 1b
 		li a0, LOOP
-		rdcycle a1
+		//rdcycle a1
 	1:
 	.rept UNROLL
 		\code
 	.endr
 		addi a0, a0, -1
 		bnez a0, 1b
-		rdcycle a0
+		//rdcycle a0
 		sub a0, a0, a1
 	ret
 .endm

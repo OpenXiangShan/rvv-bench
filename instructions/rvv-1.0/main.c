@@ -21,7 +21,8 @@ void
 run_all_types(char const *name, u64 (*bench)(void), u64 types, u64 vl, int ta, int ma) {
 	u64 arr[RUNS];
 
-	print("<tr><td>")(s,name)("</td>");
+	// print("<tr><td>")(s,name)("</td>");
+	printf("%s\n",name);
 	// e8..e64, m1..m8
 	for (u64 vtype = 0; vtype < 32; ++vtype) {
 		u64 vlmul = vtype & 7;
@@ -30,7 +31,7 @@ run_all_types(char const *name, u64 (*bench)(void), u64 types, u64 vl, int ta, i
 
 		if (!((1 << vlmul) & types) ||
 		    !((1 << vsew) & (types >> 4))) {
-			print("<td></td>");
+			// print("<td></td>");
 			continue;
 		}
 
@@ -41,30 +42,32 @@ run_all_types(char const *name, u64 (*bench)(void), u64 types, u64 vl, int ta, i
 		u64 sum = 0, count = 0;
 		for (u64 i = RUNS * 0.2f; i < RUNS * 0.8f; ++i, ++count)
 			sum += arr[i];
-		print("<td>")(fn,1,sum * 1.0/(UNROLL*LOOP*count))("</td>");
+		// print("<td>")(fn,1,sum * 1.0/(UNROLL*LOOP*count))("</td>");
+		// printf("%f\n",sum * 1.0 / (UNROLL * LOOP * count));
 
 		seed = seed*7 + 13;
 	}
-	print("</tr>\n");
-	flush();
+	// print("</tr>\n");
+	//flush();
 }
 
 int
 main(void)
 {
-	size_t x;
-	__asm volatile ("rdcycle %0" : "=r"(seed));
-	seed ^= (uintptr_t)&x;
+	// size_t x=0;
+	// __asm volatile ("rdcycle %0" : "=r"(seed));
+	// seed ^= (uintptr_t)&x;
+	reset_vector();
 
 	u64 vlarr[] = { 0, 1 };
 	for (u64 i = 0; i < 2; ++i) {
 		for (u64 j = 0; j < 4; ++j) {
-			print("\n");
+			printf("\n");
 			if (vlarr[i] != 0)
-				print("vl=")(u,vlarr[i]);
+				printf("vl= %d\n",vlarr[i]);
 			else
-				print("vl=VLMAX");
-			print(s,j & 2 ? " ta" : " tu")(s,j & 1 ? " ma" : " mu")("\n\n");
+				printf("vl=VLMAX\n");
+			printf("%s %s\n",j & 2 ? " ta" : " tu",j & 1 ? " ma" : " mu");
 			u64 (**it)(void) = &benchmarks;
 			char const *name = &benchmark_names;
 			u64 *types = &benchmark_types;
