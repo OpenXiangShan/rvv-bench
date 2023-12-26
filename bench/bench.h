@@ -108,6 +108,7 @@ main(void)
 
 	/* initialize memory */
 	randmem(mem, MAX_MEM);
+	reset_vector();
 
 	init();
 	bench_main();
