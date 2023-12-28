@@ -1,3 +1,15 @@
+# How to use in XiangShan & NEMU
+
+At present, we only use this repository to verify whether XiangShan's vector expansion is correct, so we remove the scoring in the benchmark and changed the memory to 4KB. Besides, we use [AM](https://github.com/OpenXiangShan/nexus-am) to replace `printf` API.
+
+## Compilation steps
+
+1. Initialize the `git submodule update -- init`
+
+2. Remove The rdinstret instruction in `./bench/rvv-chacha-poly/vpoly.s`. (Currently, there is no need to calculate scores)
+
+3. [./bench/](./bench/) use `make all`
+
 # RISC-V Vector benchmark
 
 A collection of RISC-V Vector (RVV) benchmarks to help developers write portably performant RVV code.
