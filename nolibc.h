@@ -24,7 +24,12 @@ void reset_vector(){
         "addiw a0,a0,512\n"
         "csrs mstatus,a0\n"// set mstatus.VS to initial
 		"csrwi fcsr,0\n"
-		"csrwi vcsr,0"// clean up vcsr
+		"csrwi vcsr,0\n"// clean up vcsr
+		"vsetvli t3, zero, e64, m8, ta, ma\n" // reset vector register
+		"vmv.v.x v0, zero\n"
+		"vmv.v.x v8, zero\n"
+		"vmv.v.x v16, zero\n"
+		"vmv.v.x v24, zero"
         ::
     );
 }
